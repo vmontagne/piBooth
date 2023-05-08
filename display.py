@@ -125,16 +125,31 @@ def capture(cap, fb):
     if not ret:
         return
 
+    print(f"frame size -> #{frame.shape}")
+
     begin_width = (PICTURE_RESOLUTION_WIDTH - PICTURE_WIDTH) / 2
     end_width = begin_width + PICTURE_WIDTH
     begin_height = (PICTURE_RESOLUTION_HEIGHT - PICTURE_HEIGHT) / 2
     end_height = begin_height + PICTURE_HEIGHT
+    cropped_frame = cv2.flip(frame[begin_height:end_height, begin_width, end_width], 1)
     cv2.imwrite(
-        str(time()) + ".jpg", frame[begin_height:end_height, begin_width, end_width]
+        str("./data/" + time()) + ".jpg",
+        cropped_frame,
     )
-    # TODO : display the picture
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, SCREEN_RESOLUTION_HEIGHT)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, SCREEN_RESOLUTION_WIDTH)
+    resized_frame = cv2.resize(
+        cropped_frame,
+        (SCREEN_HEIGHT, SCREEN_HEIGHT),
+    )
+
+    picture = np.full((SCREEN_HEIGHT, SCREEN_WIDTH, 3), 0, dtype=np.dtype(np.uint8))
+    begin_width = int((SCREEN_WIDTH - SCREEN_HEIGHT) / 2)
+    for i in range(0, SCREEN_HEIGHT):
+        for j in range(0, SCREEN_HEIGHT):
+            picture[i][begin_width + j] = resized_frame[i][j]
+    fb.seek(0)
+    fb.write(cv2.cvtColor(resized_frame, cv2.COLOR_BGR2BGR565))
 
 
 def take_picture(cap, queue):
