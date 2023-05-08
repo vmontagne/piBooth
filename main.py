@@ -1,17 +1,15 @@
-from Display import Display
+import cv2
 from Store import Store
-import time
+from multiprocessing import Process, Queue
+from display import display_loop, take_picture
+from time import sleep
 import RPi.GPIO as GPIO
 
-time.sleep(20)
+
+sleep(20)
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
-def takePicture():
-    filename = str(time.time()) + '.jpg'
-    display.takePicture(filename)
-    store.addFile(filename)
 
 
 actionPicture = 18
@@ -22,21 +20,21 @@ GPIO.setup(actionPinExit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(actionPicture, GPIO.FALLING)
 GPIO.add_event_detect(actionPinExit, GPIO.FALLING)
 
-display = Display()
 store = Store()
-exitFlag = False
+if __name__ == "__main__":
+    cap = cv2.VideoCapture(0)
+    fb = open("/dev/fb0", "rb+")
 
-def switchExitFlag():
-    global exitFlag
-    exitFlag = True
+    queue = Queue()
+    video = Process(target=display_loop, args=(cap, fb, queue))
+    video.start()
 
-while not exitFlag:
-    if GPIO.event_detected(actionPicture):
-        GPIO.remove_event_detect(actionPicture)
-        GPIO.remove_event_detect(actionPinExit)
-        takePicture()
-        GPIO.add_event_detect(actionPicture, GPIO.FALLING)
-        GPIO.add_event_detect(actionPinExit, GPIO.FALLING)
-    if GPIO.event_detected(actionPinExit):
-        switchExitFlag()
-        
+    while True:
+        if GPIO.event_detected(actionPicture):
+            GPIO.remove_event_detect(actionPicture)
+            GPIO.remove_event_detect(actionPinExit)
+            take_picture(cap, queue)
+            GPIO.add_event_detect(actionPicture, GPIO.FALLING)
+            GPIO.add_event_detect(actionPinExit, GPIO.FALLING)
+
+    video.join()
