@@ -6,7 +6,7 @@ from time import sleep
 import RPi.GPIO as GPIO
 
 
-sleep(20)
+sleep(2)
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -20,7 +20,7 @@ GPIO.setup(actionPinExit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(actionPicture, GPIO.FALLING)
 GPIO.add_event_detect(actionPinExit, GPIO.FALLING)
 
-store = Store()
+# store = Store()
 if __name__ == "__main__":
     cap = cv2.VideoCapture(0)
     fb = open("/dev/fb0", "rb+")

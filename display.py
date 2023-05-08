@@ -41,7 +41,7 @@ def add_v_line(start, end, x, frame):
 
 
 def add_border(frame):
-    begin_width = (SCREEN_WIDTH - SCREEN_HEIGHT) / 2
+    begin_width = int((SCREEN_WIDTH - SCREEN_HEIGHT) / 2)
     end_width = begin_width + SCREEN_HEIGHT
     add_v_line(0, SCREEN_HEIGHT, begin_width, frame)
     add_v_line(0, SCREEN_HEIGHT, begin_width + 1, frame)
@@ -55,10 +55,10 @@ def add_border(frame):
     add_h_line(begin_width, end_width, 1, frame)
     add_h_line(begin_width, end_width, 2, frame)
     add_h_line(begin_width, end_width, 3, frame)
-    add_h_line(begin_width, end_width, SCREEN_HEIGHT, frame)
     add_h_line(begin_width, end_width, SCREEN_HEIGHT - 1, frame)
     add_h_line(begin_width, end_width, SCREEN_HEIGHT - 2, frame)
     add_h_line(begin_width, end_width, SCREEN_HEIGHT - 3, frame)
+    add_h_line(begin_width, end_width, SCREEN_HEIGHT - 4, frame)
 
 
 def display_number(cap, fb, number):
@@ -80,11 +80,11 @@ def display_number(cap, fb, number):
     cv2.putText(
         resized_frame,
         str(number),
-        (600, 300),
+        (300, 900),
         cv2.FONT_HERSHEY_SIMPLEX,
-        50,
-        (255, 255),
-        3,
+        35,
+        (255, 255,255),
+        15,
     )
     frame_bis = cv2.cvtColor(resized_frame, cv2.COLOR_BGR2BGR565)
     add_border(frame=frame_bis)
@@ -158,12 +158,12 @@ def display_loop(cap, fb, queue):
     while True:
         try:
             msg = queue.get_nowait()
-            if msg.type == DisplayType.VIDEO:
+            if msg["type"] == DisplayType.VIDEO:
                 display = DisplayType.VIDEO
-            elif msg.type == DisplayType.NUMBER:
+            elif msg["type"] == DisplayType.NUMBER:
                 display = DisplayType.NUMBER
-                number = msg.number
-            elif msg.type == DisplayType.WHITE:
+                number = msg["number"]
+            elif msg["type"] == DisplayType.WHITE:
                 display = DisplayType.WHITE
         except Empty:
             pass
