@@ -150,6 +150,7 @@ def capture(cap, fb):
             picture[i][begin_width + j] = resized_frame[i][j]
     fb.seek(0)
     fb.write(cv2.cvtColor(resized_frame, cv2.COLOR_BGR2BGR565))
+    sleep(5)
 
 
 def take_picture(cap, queue):
@@ -165,7 +166,7 @@ def take_picture(cap, queue):
     sleep(1)
     queue.put({"type": DisplayType.WHITE})
     queue.put({"type": DisplayType.CAPTURE})
-    sleep(10)
+    sleep(1)
     queue.put({"type": DisplayType.VIDEO})
 
 
