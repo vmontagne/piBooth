@@ -131,7 +131,7 @@ def capture(cap, fb):
     end_height = begin_height + PICTURE_HEIGHT
     cropped_frame = cv2.flip(frame[begin_height:end_height, begin_width:end_width], 1)
     cv2.imwrite(
-        str("./data/" + time()) + ".jpg",
+        f"./data/{time()}.jpg",
         cropped_frame,
     )
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, SCREEN_RESOLUTION_HEIGHT)
