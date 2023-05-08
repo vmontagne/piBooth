@@ -125,13 +125,11 @@ def capture(cap, fb):
     if not ret:
         return
 
-    print(f"frame size -> #{frame.shape}")
-
-    begin_width = (PICTURE_RESOLUTION_WIDTH - PICTURE_WIDTH) / 2
+    begin_width = int((PICTURE_RESOLUTION_WIDTH - PICTURE_WIDTH) / 2)
     end_width = begin_width + PICTURE_WIDTH
-    begin_height = (PICTURE_RESOLUTION_HEIGHT - PICTURE_HEIGHT) / 2
+    begin_height = int((PICTURE_RESOLUTION_HEIGHT - PICTURE_HEIGHT) / 2)
     end_height = begin_height + PICTURE_HEIGHT
-    cropped_frame = cv2.flip(frame[begin_height:end_height, begin_width, end_width], 1)
+    cropped_frame = cv2.flip(frame[begin_height:end_height, begin_width:end_width], 1)
     cv2.imwrite(
         str("./data/" + time()) + ".jpg",
         cropped_frame,
