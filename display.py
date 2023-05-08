@@ -120,7 +120,7 @@ def display_white_screen(fb):
 def capture(cap, fb):
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, PICTURE_RESOLUTION_HEIGHT)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, PICTURE_RESOLUTION_WIDTH)
-    sleep(0.5)
+    sleep(0.1)
     ret, frame = cap.read()
     if not ret:
         return
@@ -147,7 +147,7 @@ def capture(cap, fb):
         for j in range(0, SCREEN_HEIGHT):
             picture[i][begin_width + j] = resized_frame[i][j]
     fb.seek(0)
-    fb.write(cv2.cvtColor(resized_frame, cv2.COLOR_BGR2BGR565))
+    fb.write(cv2.cvtColor(picture, cv2.COLOR_BGR2BGR565))
     sleep(5)
 
 
