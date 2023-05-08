@@ -125,12 +125,13 @@ def capture(cap, fb):
     if not ret:
         return
 
-    begin_width = (PICTURE_RESOLUTION_WIDTH - PICTURE_WIDTH) / 2
+    begin_width = int((PICTURE_RESOLUTION_WIDTH - PICTURE_WIDTH) / 2)
     end_width = begin_width + PICTURE_WIDTH
-    begin_height = (PICTURE_RESOLUTION_HEIGHT - PICTURE_HEIGHT) / 2
+    begin_height = int((PICTURE_RESOLUTION_HEIGHT - PICTURE_HEIGHT) / 2)
     end_height = begin_height + PICTURE_HEIGHT
+    print(f"frame size -> {frame.shape} | ({begin_height},{end_height}) | ({begin_width},{end_width})")
     cv2.imwrite(
-        str(time()) + ".jpg", frame[begin_height:end_height, begin_width, end_width]
+            str(time()) + ".jpg", frame[begin_height:end_height, begin_width:end_width]
     )
     # TODO : display the picture
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, SCREEN_RESOLUTION_HEIGHT)
