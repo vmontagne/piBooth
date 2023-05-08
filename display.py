@@ -9,6 +9,7 @@ class DisplayType(Enum):
     VIDEO = "VIDEO"
     WHITE = "WHITE"
     NUMBER = "NUMBER"
+    CAPTURE = "CAPTURE"
 
 
 SCREEN_HEIGHT = 1024
@@ -83,7 +84,7 @@ def display_number(cap, fb, number):
         (300, 900),
         cv2.FONT_HERSHEY_SIMPLEX,
         35,
-        (255, 255,255),
+        (255, 255, 255),
         15,
     )
     frame_bis = cv2.cvtColor(resized_frame, cv2.COLOR_BGR2BGR565)
@@ -116,18 +117,7 @@ def display_white_screen(fb):
     fb.write(WHITE_FRAME)
 
 
-def take_picture(cap, queue):
-    queue.put({"type": DisplayType.NUMBER, "number": 5})
-    sleep(1)
-    queue.put({"type": DisplayType.NUMBER, "number": 4})
-    sleep(1)
-    queue.put({"type": DisplayType.NUMBER, "number": 3})
-    sleep(1)
-    queue.put({"type": DisplayType.NUMBER, "number": 2})
-    sleep(1)
-    queue.put({"type": DisplayType.NUMBER, "number": 1})
-    sleep(1)
-    queue.put({"type": DisplayType.WHITE})
+def capture(cap, fb):
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, PICTURE_RESOLUTION_HEIGHT)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, PICTURE_RESOLUTION_WIDTH)
     sleep(0.5)
@@ -145,6 +135,22 @@ def take_picture(cap, queue):
     # TODO : display the picture
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, SCREEN_RESOLUTION_HEIGHT)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, SCREEN_RESOLUTION_WIDTH)
+
+
+def take_picture(cap, queue):
+    queue.put({"type": DisplayType.NUMBER, "number": 5})
+    sleep(1)
+    queue.put({"type": DisplayType.NUMBER, "number": 4})
+    sleep(1)
+    queue.put({"type": DisplayType.NUMBER, "number": 3})
+    sleep(1)
+    queue.put({"type": DisplayType.NUMBER, "number": 2})
+    sleep(1)
+    queue.put({"type": DisplayType.NUMBER, "number": 1})
+    sleep(1)
+    queue.put({"type": DisplayType.WHITE})
+    queue.put({"type": DisplayType.CAPTURE})
+    sleep(10)
     queue.put({"type": DisplayType.VIDEO})
 
 
@@ -165,6 +171,8 @@ def display_loop(cap, fb, queue):
                 number = msg["number"]
             elif msg["type"] == DisplayType.WHITE:
                 display = DisplayType.WHITE
+            elif msg["type"] == DisplayType.CAPTURE:
+                display = DisplayType.CAPTURE
         except Empty:
             pass
 
@@ -174,3 +182,5 @@ def display_loop(cap, fb, queue):
             display_white_screen(fb)
         elif display == DisplayType.NUMBER:
             display_number(cap, fb, number)
+        elif display == DisplayType.CAPTURE:
+            capture(cap, fb)
