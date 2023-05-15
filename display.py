@@ -15,10 +15,10 @@ class DisplayType(Enum):
 SCREEN_HEIGHT = 1024
 SCREEN_WIDTH = 1280
 
-# SCREEN_RESOLUTION_HEIGHT = 720
-# SCREEN_RESOLUTION_WIDTH = 1280
-SCREEN_RESOLUTION_HEIGHT = 1536
-SCREEN_RESOLUTION_WIDTH = 2304
+SCREEN_RESOLUTION_HEIGHT = 720
+SCREEN_RESOLUTION_WIDTH = 1280
+# SCREEN_RESOLUTION_HEIGHT = 1536
+# SCREEN_RESOLUTION_WIDTH = 2304
 
 CROPPED_WIDTH = int(SCREEN_WIDTH * SCREEN_RESOLUTION_HEIGHT / SCREEN_HEIGHT)
 
@@ -120,8 +120,9 @@ def display_white_screen(fb):
 
 
 def capture(cap, fb):
-    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, PICTURE_RESOLUTION_HEIGHT)
-    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, PICTURE_RESOLUTION_WIDTH)
+    start = time()
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, PICTURE_RESOLUTION_HEIGHT)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, PICTURE_RESOLUTION_WIDTH)
     sleep(0.1)
     ret, frame = cap.read()
     if not ret:
@@ -137,19 +138,21 @@ def capture(cap, fb):
         cropped_frame,
         (SCREEN_HEIGHT, SCREEN_HEIGHT),
     )
+    columns_to_add = (SCREEN_WIDTH - SCREEN_HEIGHT) / 2
+    black_line = np.full(
+        (SCREEN_HEIGHT, columns_to_add, 3), 0, dtype=np.dtype(np.uint8)
+    )
+    picture = np.concatenate([black_line, resized_frame, black_line], 1)
 
-    picture = np.full((SCREEN_HEIGHT, SCREEN_WIDTH, 3), 0, dtype=np.dtype(np.uint8))
-    begin_width = int((SCREEN_WIDTH - SCREEN_HEIGHT) / 2)
-    for i in range(0, SCREEN_HEIGHT):
-        for j in range(0, SCREEN_HEIGHT):
-            picture[i][begin_width + j] = resized_frame[i][j]
     fb.seek(0)
     fb.write(cv2.cvtColor(picture, cv2.COLOR_BGR2BGR565))
-
+    print(f"picture displayed after {time()-start} seconds")
     cv2.imwrite(
         f"./data/{time()}.jpg",
         cropped_frame,
     )
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, SCREEN_RESOLUTION_HEIGHT)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, SCREEN_RESOLUTION_WIDTH)
     sleep(5)
 
 
