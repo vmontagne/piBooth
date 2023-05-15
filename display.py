@@ -132,12 +132,7 @@ def capture(cap, fb):
     begin_height = int((PICTURE_RESOLUTION_HEIGHT - PICTURE_HEIGHT) / 2)
     end_height = begin_height + PICTURE_HEIGHT
     cropped_frame = cv2.flip(frame[begin_height:end_height, begin_width:end_width], 1)
-    cv2.imwrite(
-        f"./data/{time()}.jpg",
-        cropped_frame,
-    )
-    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, SCREEN_RESOLUTION_HEIGHT)
-    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, SCREEN_RESOLUTION_WIDTH)
+
     resized_frame = cv2.resize(
         cropped_frame,
         (SCREEN_HEIGHT, SCREEN_HEIGHT),
@@ -150,6 +145,11 @@ def capture(cap, fb):
             picture[i][begin_width + j] = resized_frame[i][j]
     fb.seek(0)
     fb.write(cv2.cvtColor(picture, cv2.COLOR_BGR2BGR565))
+
+    cv2.imwrite(
+        f"./data/{time()}.jpg",
+        cropped_frame,
+    )
     sleep(5)
 
 
