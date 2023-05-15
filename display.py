@@ -20,9 +20,7 @@ SCREEN_WIDTH = 1280
 SCREEN_RESOLUTION_HEIGHT = 1536
 SCREEN_RESOLUTION_WIDTH = 2304
 
-CROPPED_WIDTH = SCREEN_WIDTH * SCREEN_RESOLUTION_HEIGHT / SCREEN_HEIGHT
-
-RESOLUTION_SWITCH_RATIO = SCREEN_RESOLUTION_HEIGHT / SCREEN_HEIGHT
+CROPPED_WIDTH = int(SCREEN_WIDTH * SCREEN_RESOLUTION_HEIGHT / SCREEN_HEIGHT)
 
 PICTURE_HEIGHT = 1536
 PICTURE_WIDTH = 1536
@@ -74,9 +72,8 @@ def display_number(cap, fb, number):
         sleep(0.01)
         return
     fb.seek(0)
-    ratio = SCREEN_RESOLUTION_HEIGHT / SCREEN_HEIGHT
-    begin_width = int((SCREEN_RESOLUTION_WIDTH - (SCREEN_RESOLUTION_WIDTH * ratio)) / 2)
-    end_width = int(begin_width + (SCREEN_RESOLUTION_WIDTH * ratio))
+    begin_width = int((SCREEN_RESOLUTION_WIDTH - CROPPED_WIDTH) / 2)
+    end_width = int(begin_width + CROPPED_WIDTH)
     resized_frame = cv2.flip(
         cv2.resize(
             frame[0:SCREEN_RESOLUTION_HEIGHT, begin_width:end_width],
