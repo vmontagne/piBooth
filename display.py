@@ -138,7 +138,7 @@ def capture(cap, fb):
         cropped_frame,
         (SCREEN_HEIGHT, SCREEN_HEIGHT),
     )
-    columns_to_add = (SCREEN_WIDTH - SCREEN_HEIGHT) / 2
+    columns_to_add = int((SCREEN_WIDTH - SCREEN_HEIGHT) / 2)
     black_line = np.full(
         (SCREEN_HEIGHT, columns_to_add, 3), 0, dtype=np.dtype(np.uint8)
     )
