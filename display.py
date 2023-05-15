@@ -15,8 +15,10 @@ class DisplayType(Enum):
 SCREEN_HEIGHT = 1024
 SCREEN_WIDTH = 1280
 
-SCREEN_RESOLUTION_HEIGHT = 720
-SCREEN_RESOLUTION_WIDTH = 1280
+# SCREEN_RESOLUTION_HEIGHT = 720
+# SCREEN_RESOLUTION_WIDTH = 1280
+SCREEN_RESOLUTION_HEIGHT = 1536
+SCREEN_RESOLUTION_WIDTH = 2304
 
 PICTURE_HEIGHT = 1536
 PICTURE_WIDTH = 1536
@@ -118,8 +120,8 @@ def display_white_screen(fb):
 
 
 def capture(cap, fb):
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, PICTURE_RESOLUTION_HEIGHT)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, PICTURE_RESOLUTION_WIDTH)
+    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, PICTURE_RESOLUTION_HEIGHT)
+    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, PICTURE_RESOLUTION_WIDTH)
     sleep(0.1)
     ret, frame = cap.read()
     if not ret:
@@ -134,8 +136,8 @@ def capture(cap, fb):
         f"./data/{time()}.jpg",
         cropped_frame,
     )
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, SCREEN_RESOLUTION_HEIGHT)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, SCREEN_RESOLUTION_WIDTH)
+    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, SCREEN_RESOLUTION_HEIGHT)
+    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, SCREEN_RESOLUTION_WIDTH)
     resized_frame = cv2.resize(
         cropped_frame,
         (SCREEN_HEIGHT, SCREEN_HEIGHT),
